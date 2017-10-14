@@ -15,11 +15,22 @@ image_size = 100
 emotions_dictionary = [None, "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]
 
 def extract_face(image):
-    x, y, w, h = face_cascade.detectMultiScale(
+
+    face_result = face_cascade.detectMultiScale(
         image,
         scaleFactor=1.1,
         minNeighbors=6
-    )[0]
+    )
+
+    if len(face_result) == 0:
+        return []
+
+    x, y, w, h = face_result[0]
+    # x, y, w, h = face_cascade.detectMultiScale(
+    #     image,
+    #     scaleFactor=1.1,
+    #     minNeighbors=6
+    # )[0]
 
     face = image[y:y + h, x:x + w]
     resized_face = cv2.resize(face, (image_size, image_size))
@@ -27,7 +38,12 @@ def extract_face(image):
     return resized_face
 
 def load_and_process_image(filename):
-    return extract_face(cv2.imread(filename, cv2.IMREAD_GRAYSCALE)).flatten()
+    result = extract_face(cv2.imread(filename, cv2.IMREAD_GRAYSCALE))
+    if len(result) == 0:
+        return result
+    else:
+        return result.flatten()
+    # return extract_face(cv2.imread(filename, cv2.IMREAD_GRAYSCALE)).flatten()
 
 def images_emotions_data(participant_id, session_id):
     emotion_files = glob.glob('CK+/Emotion/{}/{}/*'.format(participant_id, session_id))
@@ -89,4 +105,7 @@ def load_classifier(filename):
 
 def predict_image(classifier, filename):
     face = load_and_process_image(filename)
+    if len(face) == 0:
+        print("no face detected")
+        return -1
     return classifier.predict([face])[0]
