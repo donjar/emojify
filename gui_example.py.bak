@@ -1,0 +1,38 @@
+import numpy as np
+import emoji
+import cv2
+import matplotlib as mpl
+from matplotlib import pyplot as plt
+import matplotlib.font_manager as font_manager
+import time
+
+emoji_font_path = '/usr/share/fonts/noto/NotoEmoji-Regular.ttf'
+prop = font_manager.FontProperties(fname=emoji_font_path)
+mpl.rcParams['font.family'] = prop.get_name()
+print(prop.get_name())
+
+img = cv2.imread("image-1.png", 0)
+plt.imshow(img, cmap = 'gray', interpolation = 'bicubic')
+plt.xticks([]), plt.yticks([])
+
+# attempt to print out emoji
+cookie = emoji.emojize(':cookie:')
+smile = emoji.emojize(':confused:')
+# plt.annotate(label, (50, 50), fontname=prop.get_name())
+
+
+# using text object to display the emoji
+text1 = plt.text(50, 50, smile)
+print("text added")
+
+# plt.show()
+
+toggle = False
+while(True):
+    if toggle:
+        text1.set_text(cookie)
+    else:
+        text1.set_text(smile)
+    toggle = not toggle
+    print("updated emoji")
+    plt.pause(1)
