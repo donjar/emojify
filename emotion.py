@@ -1,6 +1,7 @@
 import glob
 import cv2
 import matplotlib.pyplot as plt
+import pickle
 import numpy as np
 
 from sklearn.model_selection import train_test_split
@@ -25,6 +26,9 @@ def extract_face(image):
 
     return resized_face
 
+def load_and_process_image(filename):
+    return extract_face(cv2.imread(filename, cv2.IMREAD_GRAYSCALE)).flatten()
+
 def images_emotions_data(participant_id, session_id):
     emotion_files = glob.glob('CK+/Emotion/{}/{}/*'.format(participant_id, session_id))
     if len(emotion_files) == 0:
@@ -42,7 +46,7 @@ def images_emotions_data(participant_id, session_id):
     length = int(len(session_images) / 4)
 
     images = [session_images[-1 - i] for i in range(length)]
-    data = (extract_face(cv2.imread(image, cv2.IMREAD_GRAYSCALE)).flatten() for image in images)
+    data = (load_and_process_image(image_file) for image_file in images)
 
     return [data, [emotion for i in range(length)]]
 
@@ -74,6 +78,15 @@ def generate_classifier():
 
     return clf
 
-def predict_image(classifier, image):
-    face = extract_face(image)
-    return classifier.predict([face])
+def save_classifier(classifier, filename):
+    with open(filename, 'sr+') as f:
+        p = pickle.dumps(classifier)
+        f.write(p)
+
+def load_classifier(filename):
+    with open(filename, 'rb') as f:
+        return pickle.loads(f.read())
+
+def predict_image(classifier, filename):
+    face = load_and_process_image(filename)
+    return classifier.predict([face])[0]
