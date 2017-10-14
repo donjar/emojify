@@ -89,4 +89,4 @@ def load_classifier(filename):
 
 def predict_image(classifier, filename):
     face = load_and_process_image(filename)
-    return classifier.predict([face])
+    return classifier.predict([face])[0]
