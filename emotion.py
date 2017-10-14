@@ -1,6 +1,7 @@
 import glob
 import cv2
 import matplotlib.pyplot as plt
+import pickle
 import numpy as np
 
 from sklearn.model_selection import train_test_split
@@ -73,6 +74,15 @@ def generate_classifier():
     clf.fit(X, y)
 
     return clf
+
+def save_classifier(classifier, filename):
+    with open(filename, 'sr+') as f:
+        p = pickle.dumps(classifier)
+        f.write(p)
+
+def load_classifier(filename):
+    with open(filename, 'rb') as f:
+        return pickle.loads(f.read())
 
 def predict_image(classifier, image):
     face = extract_face(image)
