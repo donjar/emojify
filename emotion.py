@@ -9,8 +9,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_predict, cross_val_score
 from sklearn.model_selection import train_test_split
 
-cascade_path = 'haarcascade_frontalface_default.xml'
-face_cascade = cv2.CascadeClassifier(cascade_path)
+face_cascade = cv2.CascadeClassifier('haarcascades/face.xml')
 image_size = 100
 emotions_dictionary = [None, 'anger', 'contempt', 'disgust', 'fear', 'happy', 'sadness', 'surprise']
 
