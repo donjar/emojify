@@ -44,7 +44,6 @@ while(True):
     s_img = emoji
     l_img = frame
     y_offset = x_offset = 300
-    # l_img[y_offset:y_offset+s_img.shape[0], x_offset:x_offset+s_img.shape[1]] = s_img
     for y in range(s_img.shape[0]):
         for x in range(s_img.shape[1]):
             if not np.array_equal(s_img[y][x], emoji[0][0]):
