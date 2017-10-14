@@ -1,18 +1,18 @@
-import glob
 import cv2
+import glob
 import matplotlib.pyplot as plt
-import pickle
 import numpy as np
+import pickle
 
-from sklearn.model_selection import train_test_split
 from sklearn.linear_model import SGDClassifier
-from sklearn.model_selection import cross_val_predict, cross_val_score
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import cross_val_predict, cross_val_score
+from sklearn.model_selection import train_test_split
 
-cascade_path = "haarcascade_frontalface_default.xml"
+cascade_path = 'haarcascade_frontalface_default.xml'
 face_cascade = cv2.CascadeClassifier(cascade_path)
 image_size = 100
-emotions_dictionary = [None, "anger", "contempt", "disgust", "fear", "happy", "sadness", "surprise"]
+emotions_dictionary = [None, 'anger', 'contempt', 'disgust', 'fear', 'happy', 'sadness', 'surprise']
 
 def extract_face(image):
     x, y, w, h = face_cascade.detectMultiScale(
@@ -51,7 +51,7 @@ def images_emotions_data(participant_id, session_id):
     return [data, [emotion for i in range(length)]]
 
 def generate_classifier():
-    participants = glob.glob("CK+/Emotion/*")
+    participants = glob.glob('CK+/Emotion/*')
 
     images = []
     emotions = []
