@@ -27,11 +27,17 @@ def extract_faces(image):
     return result
 
 def extract_faces_and_emotions(classifier, image):
+    def dist(f_e):
+        x,y,w,h = f_e[0]
+        return x*x + y*y
+
     faces = extract_faces(image)
     if len(faces) == 0:
         print("no face detected")
     emotions = [classifier.predict([face[0]])[0] for face in faces]
-    return list(zip([f[1] for f in faces], emotions))
+    result = list(zip([f[1] for f in faces], emotions))
+    result.sort(key=dist)
+    return result
 
 def extract_face(image):
 
