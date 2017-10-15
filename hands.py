@@ -70,3 +70,5 @@ def count_number(filename):
     thresholded = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
     contours = cv2.findContours(thresholded, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
     segmented = max(contours, key=cv2.contourArea)
+
+    return count(thresholded, segmented)
