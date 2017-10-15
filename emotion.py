@@ -13,6 +13,32 @@ face_cascade = cv2.CascadeClassifier('haarcascades/face.xml')
 image_size = 100
 emotions_dictionary = [None, 'anger', 'contempt', 'disgust', 'fear', 'happy', 'sadness', 'surprise']
 
+def extract_faces(image):
+    face_result = face_cascade.detectMultiScale(
+        image,
+        scaleFactor=1.1,
+        minNeighbors=6
+    )
+    result = []
+    for x,y,w,h in face_result:
+        face = image[y:y + h, x:x + w]
+        resized_face = cv2.resize(face, (image_size, image_size))
+        result.append((resized_face.flatten(), (x,y,w,h)))
+    return result
+
+def extract_faces_and_emotions(classifier, image):
+    def dist(f_e):
+        x,y,w,h = f_e[0]
+        return x*x + y*y
+
+    faces = extract_faces(image)
+    if len(faces) == 0:
+        print("no face detected")
+    emotions = [classifier.predict([face[0]])[0] for face in faces]
+    result = list(zip([f[1] for f in faces], emotions))
+    result.sort(key=dist)
+    return result
+
 def extract_face(image):
 
     face_result = face_cascade.detectMultiScale(
@@ -107,4 +133,6 @@ def predict_image(classifier, filename):
     if len(face) == 0:
         print("no face detected")
         return -1
-    return classifier.predict([face])[0]
+    result = classifier.predict([face])
+    print(result)
+    return result[0]
